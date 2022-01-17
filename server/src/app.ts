@@ -8,6 +8,7 @@ import { RegisterRoutes } from "./routes/routes";
 import { createOrmConnection } from "./ormConnection";
 import * as swaggerJson from './routes/swagger.json';
 import * as swaggerUI from 'swagger-ui-express';
+import { OperationError } from "./common/operation-error";
 
 dotenv.config();
 
@@ -38,6 +39,8 @@ if (process.env.NODE_ENV === 'production') {
 
 RegisterRoutes(app);
 app.use(['/openapi', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+
+OperationError.addErrorHandler(app);
 
 //Server Activation
 app.listen(port, () => {

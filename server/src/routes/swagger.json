@@ -23,6 +23,49 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"LoginResponseModel": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"roles": {
+						"items": {
+							"$ref": "#/components/schemas/RoleModel"
+						},
+						"type": "array"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"name",
+					"roles",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginModel": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserModel": {
 				"properties": {
 					"id": {
@@ -68,6 +111,35 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginModel"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/users/{id}": {
 			"get": {
 				"operationId": "GetUserById",
