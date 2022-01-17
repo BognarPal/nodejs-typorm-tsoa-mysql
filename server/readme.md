@@ -47,3 +47,4 @@ tsoa route-ok és swagger.json létrehozása
 npm run tsoa spec-and-routes
 ```
 
+https://tsoa-community.github.io/docs/authentication.html
