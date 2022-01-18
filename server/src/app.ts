@@ -9,6 +9,7 @@ import { createOrmConnection } from "./ormConnection";
 import * as swaggerJson from './routes/swagger.json';
 import * as swaggerUI from 'swagger-ui-express';
 import { OperationError } from "./common/operation-error";
+import { updateLastAccessDate } from "./common/authentication";
 
 dotenv.config();
 
@@ -37,10 +38,10 @@ if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 }
 
+app.use(updateLastAccessDate)
 RegisterRoutes(app);
 app.use(['/openapi', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
-
-OperationError.addErrorHandler(app);
+app.use(OperationError.addErrorHandler);
 
 //Server Activation
 app.listen(port, () => {

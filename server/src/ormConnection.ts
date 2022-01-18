@@ -2,7 +2,7 @@ import { Connection, ConnectionOptions, createConnection } from 'typeorm';
  
 
 export async function createOrmConnection(): Promise<Connection> {
-    var connection = createConnection({
+    const connection = createConnection({
         type: 'mysql',
         host: process.env.DATABASE_HOST,
         port: Number(process.env.DATABASE_PORT),

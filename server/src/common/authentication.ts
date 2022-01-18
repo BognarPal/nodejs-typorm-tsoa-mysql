@@ -1,4 +1,5 @@
 import * as express from "express";
+
 import { getCustomRepository } from "typeorm";
 import { AuthRepository } from "../repositories/auth.repository";
 import { HttpStatusCode } from "./http-status-code";
@@ -16,14 +17,21 @@ export function expressAuthentication(
         reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
       }
       else {
-        //TODO: token lejárat ellenőrzése
-        var user = await getCustomRepository(AuthRepository).checkToken(token.toString());
-        var matchedRoles = user.roles.filter(r => scopes?.includes(r.name) );
-        console.log(matchedRoles);
-        if (matchedRoles.length > 0) {
-          resolve(user)
+        const session = await getCustomRepository(AuthRepository).getSession(token.toString());
+        if (!session ) {
+          reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
+        } else {
+          let validTo = new Date()
+          validTo.setTime(session.lastAccess.getTime() + parseInt(process.env.SESSION_TIMEOUT_MINUTE as string, 10) * 60 * 1000);
+          if (validTo < new Date()) {
+            reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
+          }
+          const matchedRoles = session.user.roles.filter(r => scopes?.includes(r.name) );
+          if (matchedRoles.length > 0) {
+            resolve(session.user)
+          }
+          reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
         }
-        reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
       }      
     });
   }
@@ -33,3 +41,15 @@ export function expressAuthentication(
     });
   }
 }
+
+export async function updateLastAccessDate( 
+  request: express.Request,
+  response: express.Response,
+  next: express.NextFunction
+  ) {
+    const token = request.headers["Authorization"] || request.headers["authorization"];     
+    if (token) {
+      await getCustomRepository(AuthRepository).updateSessionLastAccessDate(token.toString());
+    }
+    next();
+  }

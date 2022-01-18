@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 @EntityRepository(UserModel)
 export class UserRepository extends GenericRepository<UserModel> {
     async getByEmail(email: string): Promise<UserModel> {
-        var user =  await this.repository.findOne({
+        const user =  await this.repository.findOne({
             where: { email: email },
             relations: ['roles']
         });

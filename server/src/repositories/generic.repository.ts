@@ -9,7 +9,7 @@ export class GenericRepository<T> extends AbstractRepository<T> {
   }
 
   async getById(id: number): Promise<T> {
-    var item =  await this.repository.findOne(id);
+    const item =  await this.repository.findOne(id);
     if (!item) {
         throw new OperationError("NOT_FOUND", HttpStatusCode.NOT_FOUND);
     }

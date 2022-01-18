@@ -1,10 +1,6 @@
 import { HttpStatusCode } from "./http-status-code";
 import * as core from 'express-serve-static-core';
-import {
-  Response as ExResponse,
-  Request as ExRequest,
-  NextFunction,
-} from "express";
+import * as express from "express";
 
 export type OperationErrorMessage =
   | "UNKNOWN_ERROR"
@@ -19,13 +15,12 @@ export class OperationError extends Error {
     super(message);
   }
 
-  static addErrorHandler(app: core.Express ) {
-    app.use(function(
+  static addErrorHandler(    
       err: unknown,
-      req: ExRequest,
-      res: ExResponse,
-      next: NextFunction
-    ): ExResponse | void {
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+      ): express.Response | void {
       if (err instanceof OperationError) {
         console.warn(`Caught Operational Error for ${req.path}:`, err.message, err.stack);
         return res.status(err.status).json({
@@ -38,8 +33,6 @@ export class OperationError extends Error {
           message: "Internal Server Error",
         });
       }
-    
       next();
-    });
   }
 }
