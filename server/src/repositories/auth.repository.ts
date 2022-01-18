@@ -6,6 +6,7 @@ import { LoginResponseModel } from '../models/login.response.model';
 import { SessionModel } from '../models/session.model';
 import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcrypt'; 
+import { UserModel } from '../models/user.model';
 
 @EntityRepository(SessionModel)
 export class AuthRepository extends AbstractRepository<SessionModel>  {
@@ -30,6 +31,19 @@ export class AuthRepository extends AbstractRepository<SessionModel>  {
         });
         return response;
       }
+
+    async checkToken(token: string): Promise<UserModel>{
+        var session = await this.repository.findOne({
+            where: {token: token},
+            relations: ['user', 'user.roles']        
+        });
+        if (!session) {
+            throw new OperationError('INVALID_TOKEN', HttpStatusCode.UNAUTHORIZED);
+        }
+        else {
+            return session.user;
+        }
+    };
 
     generateToken(length = 120): string {
         var token = '';

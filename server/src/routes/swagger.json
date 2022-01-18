@@ -187,7 +187,13 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"admin"
+						]
+					}
+				],
 				"parameters": []
 			}
 		}

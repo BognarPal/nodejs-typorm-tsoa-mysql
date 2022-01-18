@@ -48,3 +48,5 @@ npm run tsoa spec-and-routes
 ```
 
 https://tsoa-community.github.io/docs/authentication.html
+
+Connection stringben MEG KELL adni a charset=UTF8-at

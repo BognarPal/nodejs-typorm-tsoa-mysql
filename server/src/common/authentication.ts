@@ -1,4 +1,8 @@
 import * as express from "express";
+import { getCustomRepository } from "typeorm";
+import { AuthRepository } from "../repositories/auth.repository";
+import { HttpStatusCode } from "./http-status-code";
+import { OperationError } from "./operation-error";
 
 export function expressAuthentication(
   request: express.Request,
@@ -6,29 +10,21 @@ export function expressAuthentication(
   scopes?: string[]
 ): Promise<any> {
   if (securityName === "token") {
-    const token =
-      request.body.token ||
-      request.query.token ||
-      request.headers["x-access-token"];
-
-    return new Promise((resolve, reject) => {
-    //   if (!token) {
-    //     reject(new Error("No token provided"));
-    //   }
-    //   jwt.verify(token, "[secret]", function (err: any, decoded: any) {
-    //     if (err) {
-    //       reject(err);
-    //     } else {
-    //       // Check if JWT contains all required scopes
-    //       for (let scope of scopes) {
-    //         if (!decoded.scopes.includes(scope)) {
-    //           reject(new Error("JWT does not contain required scope."));
-    //         }
-    //       }
-    //       resolve(decoded);
-    //     }
-    //   });
-    
+    const token = request.headers["Authorization"] || request.headers["authorization"];        
+    return new Promise(async (resolve, reject) => {
+      if (!token) {
+        reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
+      }
+      else {
+        //TODO: token lejárat ellenőrzése
+        var user = await getCustomRepository(AuthRepository).checkToken(token.toString());
+        var matchedRoles = user.roles.filter(r => scopes?.includes(r.name) );
+        console.log(matchedRoles);
+        if (matchedRoles.length > 0) {
+          resolve(user)
+        }
+        reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
+      }      
     });
   }
   else {

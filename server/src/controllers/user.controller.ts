@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Path, Post, Query, Route, SuccessResponse } from "tsoa";
+import {Body, Controller, Get, Path, Post, Query, Route, Security, SuccessResponse } from "tsoa";
 import { Connection, createConnection, getCustomRepository } from "typeorm";
 import { UserModel } from "../models/user.model";
 import { UserRepository } from "../repositories/user.repository";
@@ -6,15 +6,17 @@ import { UserRepository } from "../repositories/user.repository";
   @Route("users")
   export class UserController extends Controller {
     
-     @Get("{id}")
+    @Get("{id}")
     public async getUserById(@Path() id: number): Promise<UserModel> {        
         return await getCustomRepository(UserRepository).getById(id)
     }
   
     @Get()
+    @Security("token", ["admin"])
     public async getAllUsers(): Promise<UserModel[]> {
         return await getCustomRepository(UserRepository).getAll();
     }
+
 
     /*
     @SuccessResponse("201", "Created") // Custom success response
