@@ -31,6 +31,7 @@ export class OperationError extends Error {
         });
       }
       if (err instanceof Error) {
+        console.warn(`Error: ${req.path}:`, err.message, err.stack);
         return res.status(500).json({
           message: "Internal Server Error",
         });

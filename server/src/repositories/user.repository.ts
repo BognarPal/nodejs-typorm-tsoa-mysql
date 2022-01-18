@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 export class UserRepository extends GenericRepository<UserModel> {
     async getByEmail(email: string): Promise<UserModel> {
         var user =  await this.repository.findOne({
-             where: { email: email },
+            where: { email: email },
             relations: ['roles']
         });
         if (!user) {

@@ -5,7 +5,7 @@ import { LoginResponseModel } from "../models/login.response.model";
 import { AuthRepository } from "../repositories/auth.repository";
 
 @Route("auth")
-  export class UserController extends Controller {
+  export class AuthController extends Controller {
     
     @Post("login")
     public async login(@Body() model: LoginModel): Promise<LoginResponseModel> {        

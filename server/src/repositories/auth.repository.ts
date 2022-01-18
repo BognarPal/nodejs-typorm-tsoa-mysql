@@ -4,7 +4,6 @@ import { OperationError } from '../common/operation-error';
 import { LoginModel } from '../models/login.model';
 import { LoginResponseModel } from '../models/login.response.model';
 import { SessionModel } from '../models/session.model';
-import { UserModel } from '../models/user.model';
 import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcrypt'; 
 

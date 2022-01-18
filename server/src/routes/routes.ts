@@ -3,7 +3,7 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { UserController } from './../controllers/auth.controller';
+import { AuthController } from './../controllers/auth.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/user.controller';
 import * as express from 'express';
@@ -11,21 +11,12 @@ import * as express from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "RoleModel": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LoginResponseModel": {
         "dataType": "refObject",
         "properties": {
             "email": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
-            "roles": {"dataType":"array","array":{"dataType":"refObject","ref":"RoleModel"},"required":true},
+            "roles": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "token": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -36,6 +27,15 @@ const models: TsoaRoute.Models = {
         "properties": {
             "email": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RoleModel": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -64,7 +64,7 @@ export function RegisterRoutes(app: express.Router) {
     // ###########################################################################################################
         app.post('/auth/login',
 
-            function UserController_login(request: any, response: any, next: any) {
+            function AuthController_login(request: any, response: any, next: any) {
             const args = {
                     model: {"in":"body","name":"model","required":true,"ref":"LoginModel"},
             };
@@ -75,7 +75,7 @@ export function RegisterRoutes(app: express.Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new UserController();
+                const controller = new AuthController();
 
 
               const promise = controller.login.apply(controller, validatedArgs as any);
