@@ -8,7 +8,10 @@ import * as bcrypt from 'bcrypt';
 @EntityRepository(UserModel)
 export class UserRepository extends GenericRepository<UserModel> {
     async getByEmail(email: string): Promise<UserModel> {
-        var user =  await this.repository.findOne({ email: email })
+        var user =  await this.repository.findOne({
+             where: { email: email },
+            relations: ['roles']
+        });
         if (!user) {
             throw new OperationError('INVALID_EMAIL_OR_PASSWORD', HttpStatusCode.FORBIDDEN);
         }

@@ -26,7 +26,7 @@ export class AuthRepository extends AbstractRepository<SessionModel>  {
         var response = new LoginResponseModel({
             email: model.email,
             name: user.name,
-            roles: user.roles,
+            roles: user.roles.map(r => r.name),
             token: session.token
         });
         return response;
