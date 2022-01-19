@@ -27,7 +27,7 @@ export function expressAuthentication(
             reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));
           }
           const matchedRoles = session.user.roles.filter(r => scopes?.includes(r.name) );
-          if (matchedRoles.length > 0) {
+          if (matchedRoles.length > 0 || !scopes || scopes.length == 0) {
             resolve(session.user)
           }
           reject(new OperationError("NOT_AUTHORIZED", HttpStatusCode.UNAUTHORIZED));

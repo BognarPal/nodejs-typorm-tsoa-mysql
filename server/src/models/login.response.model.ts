@@ -5,6 +5,7 @@ export class LoginResponseModel {
     name: string;
     roles: string[];
     token: string;
+    validTo: Date;
 
     public constructor(init?:Partial<LoginResponseModel>) {
         if (init)

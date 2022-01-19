@@ -5,6 +5,8 @@
 - telepítés apache-ra
 - docker, kubernetes
 
+- back-end middleware -> response headerbe kell egy session
+
 ## typeorm
 Official doc: [https://orkhan.gitbook.io/typeorm/docs/using-cli](https://orkhan.gitbook.io/typeorm/docs/using-cli)
 

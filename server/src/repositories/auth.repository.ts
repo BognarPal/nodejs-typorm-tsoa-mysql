@@ -23,14 +23,17 @@ export class AuthRepository extends AbstractRepository<SessionModel>  {
         });
         await this.repository.insert(session)
 
+        let validTo = new Date()
+        validTo.setTime(session.lastAccess.getTime() + parseInt(process.env.SESSION_TIMEOUT_MINUTE as string, 10) * 60 * 1000);
         const response = new LoginResponseModel({
             email: model.email,
             name: user.name,
             roles: user.roles.map(r => r.name),
-            token: session.token
+            token: session.token,
+            validTo: validTo
         });
         return response;
-    }
+    }    
 
     async getSession(token: string): Promise<SessionModel | undefined> {
         let session = await this.repository.findOne({
@@ -48,6 +51,17 @@ export class AuthRepository extends AbstractRepository<SessionModel>  {
             }
         }
         return session;
+    };
+
+    async deleteSession(token: string): Promise<boolean> {
+        let session = await this.repository.findOne({
+            where: { token: token }
+        });
+
+        if (session) {
+            await this.repository.remove(session);
+        }
+        return true;
     };
 
     async updateSessionLastAccessDate(token: string): Promise<void> {
