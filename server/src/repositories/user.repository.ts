@@ -3,22 +3,25 @@ import { EntityRepository } from 'typeorm'
 import { UserModel } from '../models/user.model';
 import { OperationError } from '../common/operation-error';
 import { HttpStatusCode } from '../common/http-status-code';
-import * as bcrypt from 'bcrypt'; 
+import * as bcrypt from 'bcrypt';
 
 @EntityRepository(UserModel)
 export class UserRepository extends GenericRepository<UserModel> {
-    async getByEmail(email: string): Promise<UserModel> {
-        const user =  await this.repository.findOne({
+    async getByEmail(email: string): Promise<UserModel | undefined> {
+        const user = await this.repository.findOne({
             where: { email: email },
             relations: ['roles']
-        });
-        if (!user) {
-            throw new OperationError('INVALID_EMAIL_OR_PASSWORD', HttpStatusCode.FORBIDDEN);
-        }
+        });       
         return user;
-      }
+    }
 
-    static hashPassword(password: string): string {        
-        return bcrypt.hashSync(password, 10);        
+    async insert(model: UserModel): Promise<UserModel> {
+        await this.repository.insert(model)
+        const user = this.getByEmail(model.email);
+        return user as Promise<UserModel>;        
+    }
+
+    static hashPassword(password: string): string {
+        return bcrypt.hashSync(password, 10);
     }
 }

@@ -54,6 +54,28 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RegistrationModel": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"default": ""
+					},
+					"email": {
+						"type": "string",
+						"default": ""
+					},
+					"password": {
+						"type": "string",
+						"default": ""
+					},
+					"passwordAgain": {
+						"type": "string",
+						"default": ""
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RoleModel": {
 				"properties": {
 					"id": {
@@ -185,6 +207,35 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/auth/registration": {
+			"post": {
+				"operationId": "Regisztration",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegistrationModel"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/users/{id}": {

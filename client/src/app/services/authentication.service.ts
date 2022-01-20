@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
+import { RegistrationModel } from '@serverModels/registration.model';
 
 import { UserModel } from './../../models/user.model';
 
@@ -28,6 +29,17 @@ export class AuthenticationService {
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password })
+      .pipe(map(user => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserChanged.emit(this.currentUser);
+        }
+        return user;
+      }));
+  }
+
+  registration(model: RegistrationModel): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/registration`, model )
       .pipe(map(user => {
         if (user && user.token) {
           localStorage.setItem('currentUser', JSON.stringify(user));

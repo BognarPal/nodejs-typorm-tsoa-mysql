@@ -35,6 +35,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RegistrationModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","default":""},
+            "email": {"dataType":"string","default":""},
+            "password": {"dataType":"string","default":""},
+            "passwordAgain": {"dataType":"string","default":""},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RoleModel": {
         "dataType": "refObject",
         "properties": {
@@ -94,6 +105,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function AuthController_CheckToken(request: any, response: any, next: any) {
             const args = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -129,6 +141,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
               const promise = controller.Logout.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/auth/registration',
+
+            function AuthController_regisztration(request: any, response: any, next: any) {
+            const args = {
+                    model: {"in":"body","name":"model","required":true,"ref":"RegistrationModel"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new AuthController();
+
+
+              const promise = controller.regisztration.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
